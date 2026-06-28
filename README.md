@@ -1,0 +1,2 @@
+# GadelhaIA
+Minha IA profissional 
