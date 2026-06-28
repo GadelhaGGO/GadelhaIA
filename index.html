@@ -84,14 +84,14 @@
                         <button onclick="triggerMenuAction('Quem é você?')" class="w-full text-left px-3 py-2.5 text-sm hover:bg-gray-500/10 rounded-lg transition-colors flex items-center gap-2">
                             <i class="fa-solid fa-user-tie text-[#a8c7fa]"></i> Quem é você?
                         </button>
-                        <button onclick="triggerMenuAction('Qual a sua formação?')" class="w-full text-left px-3 py-2.5 text-sm hover:bg-gray-500/10 rounded-lg transition-colors flex items-center gap-2">
+                        <button onclick="triggerMenuAction('Qual sua formação?')" class="w-full text-left px-3 py-2.5 text-sm hover:bg-gray-500/10 rounded-lg transition-colors flex items-center gap-2">
                             <i class="fa-solid fa-graduation-cap text-[#a8c7fa]"></i> Formação
                         </button>
-                        <button onclick="triggerMenuAction('Quais são seus hobbies e esportes?')" class="w-full text-left px-3 py-2.5 text-sm hover:bg-gray-500/10 rounded-lg transition-colors flex items-center gap-2">
-                            <i class="fa-solid fa-dumbbell text-[#a8c7fa]"></i> Hobby
-                        </button>
-                        <button onclick="triggerMenuAction('Fale sobre o seu Perfil Profissional')" class="w-full text-left px-3 py-2.5 text-sm hover:bg-gray-500/10 rounded-lg transition-colors flex items-center gap-2">
+                        <button onclick="triggerMenuAction('Qual sua profissão?')" class="w-full text-left px-3 py-2.5 text-sm hover:bg-gray-500/10 rounded-lg transition-colors flex items-center gap-2">
                             <i class="fa-solid fa-briefcase text-[#a8c7fa]"></i> Perfil Profissional
+                        </button>
+                        <button onclick="triggerMenuAction('Quais são seus hobbies e esportes?')" class="w-full text-left px-3 py-2.5 text-sm hover:bg-gray-500/10 rounded-lg transition-colors flex items-center gap-2">
+                            <i class="fa-solid fa-dumbbell text-[#a8c7fa]"></i> Hobby / Esporte
                         </button>
                         <button onclick="togglePlus100(event)" class="w-full text-left px-3 py-2.5 text-sm font-bold text-[#a8c7fa] hover:bg-gray-500/10 rounded-lg transition-colors flex items-center justify-between">
                             <span><i class="fa-solid fa-cubes mr-2"></i> +100 Perguntas</span>
@@ -136,40 +136,32 @@
     </footer>
 
     <script>
-        const gadelhaKnowledge = {
-            bomDia: "Bom dia, meu(minha) jogador(a)!",
-            boaTarde: "Boa tarde, meu(minha) jogador(a)!",
-            boaNoite: "Boa noite, meu(minha) jogador(a)!",
-            namoro: "Estou procurando, hein! Rsrs",
-            comoVai: "Estou bem, meu(minha) jogador(a), e você como está?",
-            triste: "Se anime! Você é o(a) melhor!",
-            altura: "1,80m",
-            peso: "106kg atualmente.",
-            mora: "Planeta Terra, rsrsrs.",
-            time: "Corinthians!",
-            mulher: "Todas têm suas qualidades.",
-            antipreconceito: "Diga não ao preconceito!",
-            gosta: "Viver uma vida leve, fazendo coisas que eu gosto.",
-            frase: "Você é o melhor!\nEu acredito em você.",
-            aprender: "Sempre!",
-            chato: "Quem não é, rsrsrs.",
-            seAcha: "Me acho mesmo! Jogador(a) na área!",
-            jogadorCaro: "Opa! Está falando com ele(a) 😉",
-            leitura: "Gosto muito, porém tem que ser algo que agregue em minha vida. Li uma vez um livro de espiritismo que achei muito bacana. Não sou fã de romance.",
-            desafio: "É comigo mesmo! Manda que eu mato no peito.",
-            realMotiva: "Time que sou técnico atualmente. Comecei no ataque, lateral, zaga e até no gol! Fiz boas defesas, confere lá no Insta: @RealMotivaFC.",
-            deus: "Sou grato todos os dias 🙏",
-            jesus: "Tenho fé 🙏",
-            idolo: "Neymar e Ronaldo Fenômeno, entre outros.",
-            fa: "Muito obrigado pela honra 😄😄😄",
-            quemE: "Muito prazer! Meu nome é Genilson Gadelha, amplamente conhecido nos meus ambientes de atuação como 'Jogador Caro' ou 'Leão'. Tenho 42 anos, sou pai orgulhoso de 2 filhos, solteiro e focado em uma vida de alta performance, sem vícios. Minha mentalidade é sempre voltada ao crescimento e à liderança.",
-            formacao: "Minha base acadêmica é sólida e estratégica. Sou formado em Gestão de Recursos Humanos e em Gestão de Segurança Privada, com MBA em Gestão de Pessoas.\n\nAlém disso, possuo um portfólio robusto de qualificações técnicas, incluindo:\n• Formação de Bombeiro Civil e Vigilante Patrimonial\n• Proficiência nas Normas Regulamentadoras (NRs)\n• Domínio do Pacote Office avançado\n• Desenvolvimento de software e automações (HTML, CSS, Python, entre outros).",
-            hobby: "O esporte e a alta performance física são meus grandes combustíveis. Atualmente, atuo com liderança tática como Técnico de Futebol de Campo de várzea (Campeonato Interno) e sou praticante de Futebol Society aos finais de semana.\n\nNas artes marciais, fui Campeão de Jiu-Jitsu na faixa azul e iniciei no Muay Thai (graduação vermelha e branca). Sou apaixonado por treinos e musculação.",
-            perfilProfissional: "Mais de 15 anos de experiência em Segurança Privada. Atualmente Operador de Metrô (4 anos na empresa). Detentor de projetos inovadores nas áreas de segurança e tráfego como:\n• Simop\n• Sala de Aula\n• Rebocador\n• Vídeo Aulas e Cursos PDF\n• Planilha Edmonson, entre outros sistemas.",
-            padrao: "Essa pergunta não está mapeada no meu plano tático, jogador(a) caro(a). Mas mande outra que eu mato no peito!"
-        };
-
-        const plus100Questions = [
+        const fullDatabase = [
+            { q: "Quem é você?", a: "Sou Gadelha, também conhecido como Jogador Caro. Tenho 42 anos, sou profissional da área metroviária, apaixonado por tecnologia, desenvolvimento de pessoas, futebol e inovação." },
+            { q: "Qual sua formação?", a: "Sou formado em Gestão de Recursos Humanos, Gestão de Segurança Privada e possuo MBA em Gestão de Pessoas. Atualmente também invisto continuamente em novos conhecimentos." },
+            { q: "Qual sua profissão?", a: "Atualmente atuo como Operador de Trem, possuindo experiência no transporte metroviário e em operações." },
+            { q: "Quais empresas você já trabalhou?", a: "Atualmente trabalho na Motiva, já trabalhei na Verzani & Sandrini, Albatroz Vigilância e Segurança, acumulando experiências em diferentes áreas operacionais." },
+            { q: "Qual sua maior qualidade profissional?", a: "Comprometimento. Quando assumo uma missão, vou até o final buscando entregar resultados." },
+            { q: "O que é o Projeto Jogador Caro?", a: "É uma filosofia pessoal baseada em evolução contínua, disciplina, conhecimento e valorização profissional." },
+            { q: "Você gosta de estudar?", a: "Sim. Acredito que conhecimento é um dos melhores investimentos que uma pessoa pode fazer." },
+            { q: "Quais cursos você possui?", a: "Possuo cursos de Excel Avançado, Bombeiro Civil, NR10, NR11, NR35 e diversas capacitações voltadas para operações e segurança." },
+            { q: "Você entende de tecnologia?", a: "Sim. Tenho conhecimentos em Python, HTML, JavaScript, Excel avançado, criação de sites, simuladores e automações." },
+            { q: "Você desenvolve sistemas?", a: "Sim. Já desenvolvi aplicativos, simuladores e ferramentas para facilitar processos e treinamentos." },
+            { q: "O que motivou você a criar simuladores?", a: "A vontade de tornar o aprendizado mais eficiente, prático e próximo da realidade operacional." },
+            { q: "Qual é sua área de especialidade?", a: "Operações metroviárias, treinamento operacional, tecnologia aplicada e gestão de pessoas." },
+            { q: "Qual cargo você deseja alcançar?", a: "Busco crescimento profissional em cargos de liderança e gestão operacional." },
+            { q: "Você trabalha em equipe?", a: "Sim. Acredito que grandes resultados são construídos através da colaboração." },
+            { q: "Como você lida com pressão?", a: "Mantenho o foco na solução, priorizando a análise da situação e a tomada de decisão consciente." },
+            { q: "Qual seu diferencial?", a: "Unir experiência operacional com conhecimento em tecnologia e desenvolvimento de soluções." },
+            { q: "Você gosta de inovar?", a: "Muito. Sempre procuro maneiras de melhorar processos e aumentar a eficiência." },
+            { q: "O que significa sucesso para você?", a: "Ser feliz, evoluir constantemente e impactar positivamente as pessoas ao meu redor." },
+            { q: "Você gosta de ensinar?", a: "Sim. Compartilhar conhecimento é uma das formas mais poderosas de crescimento coletivo." },
+            { q: "Qual sua relação com o futebol?", a: "O futebol faz parte da minha vida. Além de praticar, utilizo seus ensinamentos sobre trabalho em equipe, estratégia e disciplina." },
+            { q: "Por que o apelido Jogador Caro?", a: "Porque valorizo o desenvolvimento contínuo. O objetivo é me tornar cada vez mais valioso profissionalmente." },
+            { q: "Você possui CNH?", a: "Sim. Possuo CNH categoria AD." },
+            { q: "Você gosta de desafios?", a: "Sim. Vejo os desafios como oportunidades de aprendizado e crescimento." },
+            { q: "O que você faz quando encontra um problema?", a: "Primeiro entendo a causa. Depois busco a solução mais eficiente e segura possível." },
+            { q: "Qual sua missão profissional?", a: "Evoluir constantemente, contribuir para o crescimento das equipes e gerar resultados através do conhecimento e da inovação." },
             { q: "Qual é sua experiência no transporte metroviário?", a: "Tenho mais de 3 anos de experiência atuando diretamente na operação metroviária, garantindo segurança, pontualidade e qualidade no atendimento." },
             { q: "O que você mais gosta no seu trabalho?", a: "A responsabilidade de transportar milhares de pessoas com segurança todos os dias." },
             { q: "Qual sua principal habilidade técnica?", a: "Análise operacional e resolução de problemas." },
@@ -244,8 +236,31 @@
             { q: "Como gostaria de ser lembrado?", a: "Como alguém que ajudou pessoas e deixou um legado positivo." },
             { q: "O que você busca diariamente?", a: "Ser melhor do que fui ontem." },
             { q: "Qual é a mensagem do Jogador Caro?", a: "Valorize seu conhecimento, invista em você e nunca pare de evoluir." },
-            { q: "Quem é Gadelha em uma frase?", a: "Sou o Jogador Caro: um profissional que transforma conhecimento, disciplina e inovação em resultados." }
+            { q: "Quem é Gadelha em uma frase?", a: "Sou o Jogador Caro: Um profissional que transforma conhecimento, disciplina e inovação em resultados." }
         ];
+
+        const extraKnowledge = {
+            bomDia: "Bom dia !tudo bem com voce?",
+            boaTarde: "Boa tarde ! tudo bem com voce?",
+            boaNoite: "Boa noite ! tudo bem com voce?",
+            namoro: "Estou procurando, hein! Rsrs",
+            comoVai: "Estou bem, e você como está?",
+            triste: "Se anime! Você é o melhor!",
+            mora: "Planeta Terra, rsrsrs.",
+            time: "Corinthians!",
+            mulher: "Todas têm suas qualidades.",
+            antipreconceito: "Diga não ao preconceito!",
+            gosta: "Viver uma vida leve, fazendo coisas que eu gosto.",
+            chato: "Quem não é, rsrsrs.",
+            seAcha: "Me acho mesmo! Jogador na área!",
+            jogadorCaro: "Opa! Está falando com ele 😉",
+            realMotiva: "Time que sou técnico atualmente. Comecei no ataque, lateral, zaga e até no gol! Fiz boas defesas, confere lá no Insta: @RealMotivaFC.",
+            deus: "Sou grato todos os dias 🙏",
+            jesus: "Tenho fé 🙏",
+            idolo: "Neymar, Ronaldo Fenômeno, entre outros.",
+            fa: "Muito obrigado pela honra 😄😄😄",
+            padrao: "Essa pergunta não está mapeada no meu plano tático, jogador caro. Mas mande outra que eu mato no peito!"
+        };
 
         const ballBtn = document.getElementById('ballBtn');
         const themeBtn = document.getElementById('themeBtn');
@@ -266,9 +281,9 @@
         let chatHistory = [];
         let isTyping = false;
 
-        // Gerar itens dinâmicos do +100
-        plus100Questions.forEach((item, index) => {
-            const num = index + 26;
+        // Renderizar dinamicamente TODAS de 1 a 100 na sublista
+        fullDatabase.forEach((item, index) => {
+            const num = index + 1;
             const btn = document.createElement('button');
             btn.className = "w-full text-left px-4 py-1.5 text-xs hover:bg-gray-500/10 rounded transition-colors truncate flex items-center gap-1.5";
             btn.innerHTML = `<span class="text-[#a8c7fa] font-bold">${num}.</span> ${item.q}`;
@@ -330,44 +345,41 @@
         function getBotResponse(message) {
             const cleanMsg = message.toLowerCase().trim();
             
-            // Verificação na lista estendida do +100 primeiro
-            const foundPlus = plus100Questions.find(item => item.q.toLowerCase().trim() === cleanMsg);
-            if (foundPlus) return foundPlus.a;
+            // Busca primária no banco estruturado (Perguntas 1 a 100)
+            const matchedObj = fullDatabase.find(item => item.q.toLowerCase().trim() === cleanMsg || cleanMsg.includes(item.q.toLowerCase().trim()));
+            if (matchedObj) return matchedObj.a;
 
-            if (cleanMsg === 'bom dia') return gadelhaKnowledge.bomDia;
-            if (cleanMsg === 'boa tarde') return gadelhaKnowledge.boaTarde;
-            if (cleanMsg === 'boa noite') return gadelhaKnowledge.boaNoite;
-            if (cleanMsg.match(/(namora|namorada|namorado|comprometido)/)) return gadelhaKnowledge.namoro;
-            if (cleanMsg.match(/(como vai|tudo bem|tudo bom|como voce esta)/)) return gadelhaKnowledge.comoVai;
-            if (cleanMsg.match(/(triste|chateado|desanimado|mal)/)) return gadelhaKnowledge.triste;
-            if (cleanMsg.match(/(altura|qual sua altura)/)) return gadelhaKnowledge.altura;
-            if (cleanMsg.match(/(peso|qual seu peso)/)) return gadelhaKnowledge.peso;
-            if (cleanMsg.match(/(mora|onde voce mora)/)) return gadelhaKnowledge.mora;
-            if (cleanMsg.match(/(time|torce|corinthians|timao)/)) return gadelhaKnowledge.time;
-            if (cleanMsg === 'mulher' || cleanMsg === 'mulheres') return gadelhaKnowledge.mulher;
-            if (cleanMsg.match(/(viado|bicha|boiola|gay)/)) return gadelhaKnowledge.antipreconceito;
-            if (cleanMsg.match(/(gosta de fazer|o que gosta)/)) return gadelhaKnowledge.gosta;
-            if (cleanMsg.match(/(frase|motivacao|motivacional)/)) return gadelhaKnowledge.frase;
-            if (cleanMsg.match(/(aprender|aprendizado)/)) return gadelhaKnowledge.aprender;
-            if (cleanMsg.match(/(chato|chata)/)) return gadelhaKnowledge.chato;
-            if (cleanMsg.match(/(se acha)/)) return gadelhaKnowledge.seAcha;
-            if (cleanMsg.match(/(jogador caro|jogadora cara)/)) return gadelhaKnowledge.jogadorCaro;
-            if (cleanMsg.match(/(ler|leitura|livro)/)) return gadelhaKnowledge.leitura;
-            if (cleanMsg.match(/(desafio|desafios)/)) return gadelhaKnowledge.desafio;
-            if (cleanMsg.match(/(real motiva|realmotiva)/)) return gadelhaKnowledge.realMotiva;
-            if (cleanMsg === 'deus') return gadelhaKnowledge.deus;
-            if (cleanMsg === 'jesus') return gadelhaKnowledge.jesus;
-            if (cleanMsg.match(/(idolo|ídolo|ney|ronaldo)/)) return gadelhaKnowledge.idolo;
-            if (cleanMsg.match(/(fa|fã|sou seu)/)) return gadelhaKnowledge.fa;
-            if (cleanMsg.match(/(ola|oi|quem e voce|quem e vc|nome|idade|filho|leao)/)) return gadelhaKnowledge.quemE;
-            if (cleanMsg.match(/(formacao|estudou|faculdade|mba|curso|bombeiro|vigilante|nr|python|html)/)) return gadelhaKnowledge.formacao;
-            if (cleanMsg.match(/(hobby|esporte|futebol|luta|jiu jitsu|muay thai|musculacao|tecnico)/)) return gadelhaKnowledge.hobby;
-            if (cleanMsg.match(/(perfil|profissional|experiencia|seguranca|metro|projeto|simop|edmonson)/)) return gadelhaKnowledge.perfilProfissional;
+            // Atalhos simplificados para correspondência rápida no menu principal
+            if (cleanMsg.match(/(quem e voce|quem e vc)/)) return fullDatabase[0].a;
+            if (cleanMsg.match(/(formacao|estudou|faculdade)/)) return fullDatabase[1].a;
+            if (cleanMsg.match(/(profissao|trabalha com o que|operador de trem)/)) return fullDatabase[2].a;
+            if (cleanMsg.match(/(hobby|hobbies|esportes|luta|futebol)/)) return fullDatabase[19].a;
+
+            // Banco de respostas casuais/extras
+            if (cleanMsg === 'bom dia') return extraKnowledge.bomDia;
+            if (cleanMsg === 'boa tarde') return extraKnowledge.boaTarde;
+            if (cleanMsg === 'boa noite') return extraKnowledge.boaNoite;
+            if (cleanMsg.match(/(namora|namorada|namorado|comprometido)/)) return extraKnowledge.namoro;
+            if (cleanMsg.match(/(como vai|tudo bem|tudo bom|como voce esta)/)) return extraKnowledge.comoVai;
+            if (cleanMsg.match(/(triste|chateado|desanimado|mal)/)) return extraKnowledge.triste;
+            if (cleanMsg.match(/(mora|onde voce mora)/)) return extraKnowledge.mora;
+            if (cleanMsg.match(/(time|torce|corinthians|timao)/)) return extraKnowledge.time;
+            if (cleanMsg === 'mulher' || cleanMsg === 'mulheres') return extraKnowledge.mulher;
+            if (cleanMsg.match(/(viado|bicha|boiola|gay)/)) return extraKnowledge.antipreconceito;
+            if (cleanMsg.match(/(gosta de fazer|o que gosta)/)) return extraKnowledge.gosta;
+            if (cleanMsg.match(/(chato|chata)/)) return extraKnowledge.chato;
+            if (cleanMsg.match(/(se acha)/)) return extraKnowledge.seAcha;
+            if (cleanMsg.match(/(jogador caro|jogadora cara)/)) return extraKnowledge.jogadorCaro;
+            if (cleanMsg.match(/(real motiva|realmotiva)/)) return extraKnowledge.realMotiva;
+            if (cleanMsg === 'deus') return extraKnowledge.deus;
+            if (cleanMsg === 'jesus') return extraKnowledge.jesus;
+            if (cleanMsg.match(/(idolo|ídolo|ney|ronaldo)/)) return extraKnowledge.idolo;
+            if (cleanMsg.match(/(fa|fã|sou seu)/)) return extraKnowledge.fa;
             
-            return gadelhaKnowledge.padrao;
+            return extraKnowledge.padrao;
         }
 
-        function typeWriterEffect(element, text, speed = 15) {
+        function typeWriterEffect(element, text, speed = 12) {
             isTyping = true;
             let i = 0;
             element.innerHTML = '';
@@ -447,4 +459,4 @@
         userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
     </script>
 </body>
-</html>
+    </html>
