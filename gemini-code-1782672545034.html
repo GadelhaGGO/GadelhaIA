@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gadelha IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body, header, main, footer, input, div, button {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        body.dark-mode { background-color: #131314; color: #e3e3e3; }
+        body.dark-mode header { background-color: #131314; border-color: #2d2f31; }
+        body.dark-mode #dropdownMenu, body.dark-mode #historyDrawer { background-color: #1e1f20; border-color: #2d2f31; }
+        body.dark-mode .welcome-box { background-color: #1e1f20; border-color: #2d2f31; }
+        body.dark-mode footer { background-color: #131314; border-color: #2d2f31; }
+        body.dark-mode .input-container { background-color: #1e1f20; border-color: #2d2f31; }
+        body.dark-mode .bot-icon-box { background-color: #2d2f31; border-color: #424447; }
+        body.dark-mode .user-msg { background-color: #2f3032; color: #e3e3e3; }
+
+        body.light-mode { background-color: #f0f4f9; color: #1f1f1f; }
+        body.light-mode header { background-color: #ffffff; border-color: #dee2e6; }
+        body.light-mode #dropdownMenu, body.light-mode #historyDrawer { background-color: #ffffff; border-color: #dee2e6; }
+        body.light-mode .welcome-box { background-color: #ffffff; border-color: #dee2e6; }
+        body.light-mode footer { background-color: #f0f4f9; border-color: #dee2e6; }
+        body.light-mode .input-container { background-color: #ffffff; border-color: #dee2e6; }
+        body.light-mode .bot-icon-box { background-color: #e9eef6; border-color: #d3e3fd; }
+        body.light-mode .user-msg { background-color: #e3e3e3; color: #1f1f1f; }
+
+        .gemini-gradient {
+            background: linear-gradient(90deg, #4285f4, #9b51e0, #e91e63);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        #historyDrawer { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="dark-mode h-screen flex flex-col justify-between overflow-hidden m-0 p-0 select-none">
+
+    <div id="drawerOverlay" class="fixed inset-0 bg-black/50 z-[55] hidden"></div>
+
+    <div id="historyDrawer" class="fixed top-0 left-0 h-full w-72 z-[60] transform -translate-x-full border-r p-4 flex flex-col">
+        <div class="flex items-center justify-between mb-6">
+            <span class="text-sm font-medium">Recentes</span>
+            <button id="closeDrawer" class="text-[#9aa0a6]"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div id="historyList" class="flex-1 overflow-y-auto space-y-1 hide-scrollbar">
+            <p class="text-xs text-[#5f6368] px-3 py-2 italic">Nenhuma conversa recente</p>
+        </div>
+        <div class="mt-auto pt-4 border-t border-[#2d2f31]">
+            <button onclick="resetToHome()" class="w-full flex items-center gap-3 px-3 py-2 text-sm hover:bg-gray-500/10 rounded-lg transition-colors">
+                <i class="fa-solid fa-plus"></i> Nova conversa
+            </button>
+        </div>
+    </div>
+
+    <header class="w-full h-14 border-b flex items-center justify-between px-4 z-50">
+        <div class="flex items-center gap-2">
+            <button id="ballBtn" class="text-xl text-[#a8c7fa] w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-500/10 active:scale-95 transition-all">
+                <i class="fa-solid fa-soccer-ball"></i>
+            </button>
+            <button onclick="resetToHome()" class="text-lg font-medium hover:opacity-80 active:scale-95 transition-all">
+                Gadelha IA
+            </button>
+        </div>
+        
+        <div class="flex items-center gap-1">
+            <button id="themeBtn" class="w-10 h-10 rounded-full flex items-center justify-center text-[#a8c7fa] hover:bg-gray-500/10 active:scale-95 transition-colors">
+                <i class="fa-solid fa-lightbulb text-lg"></i>
+            </button>
+
+            <div class="relative">
+                <button id="menuBtn" class="w-10 h-10 rounded-full flex items-center justify-center text-[#c4c7c5] hover:bg-gray-500/10 transition-colors">
+                    <i class="fa-solid fa-ellipsis-vertical text-lg"></i>
+                </button>
+                
+                <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-64 border rounded-xl shadow-2xl p-2 z-50 max-h-[80vh] overflow-y-auto hide-scrollbar">
+                    <div id="mainMenuItems">
+                        <div class="text-xs text-[#9aa0a6] px-3 py-1 font-semibold uppercase tracking-wider">Sugestões</div>
+                        <button onclick="triggerMenuAction('Quem é você?')" class="w-full text-left px-3 py-2.5 text-sm hover:bg-gray-500/10 rounded-lg transition-colors flex items-center gap-2">
+                            <i class="fa-solid fa-user-tie text-[#a8c7fa]"></i> Quem é você?
+                        </button>
+                        <button onclick="triggerMenuAction('Qual a sua formação?')" class="w-full text-left px-3 py-2.5 text-sm hover:bg-gray-500/10 rounded-lg transition-colors flex items-center gap-2">
+                            <i class="fa-solid fa-graduation-cap text-[#a8c7fa]"></i> Formação
+                        </button>
+                        <button onclick="triggerMenuAction('Quais são seus hobbies e esportes?')" class="w-full text-left px-3 py-2.5 text-sm hover:bg-gray-500/10 rounded-lg transition-colors flex items-center gap-2">
+                            <i class="fa-solid fa-dumbbell text-[#a8c7fa]"></i> Hobby
+                        </button>
+                        <button onclick="triggerMenuAction('Fale sobre o seu Perfil Profissional')" class="w-full text-left px-3 py-2.5 text-sm hover:bg-gray-500/10 rounded-lg transition-colors flex items-center gap-2">
+                            <i class="fa-solid fa-briefcase text-[#a8c7fa]"></i> Perfil Profissional
+                        </button>
+                        <button onclick="togglePlus100(event)" class="w-full text-left px-3 py-2.5 text-sm font-bold text-[#a8c7fa] hover:bg-gray-500/10 rounded-lg transition-colors flex items-center justify-between">
+                            <span><i class="fa-solid fa-cubes mr-2"></i> +100 Perguntas</span>
+                            <i id="plusArrow" class="fa-solid fa-chevron-down text-xs"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="plus100Container" class="hidden mt-1 border-t border-gray-500/20 pt-1 space-y-0.5"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="chatContainer" class="flex-1 overflow-y-auto px-4 py-6 space-y-6 hide-scrollbar flex flex-col">
+        <div id="welcomeScreen" class="my-auto flex flex-col items-center justify-center text-center px-4">
+            <div class="welcome-box w-16 h-16 border rounded-2xl flex items-center justify-center text-3xl text-[#a8c7fa] mb-4 shadow-lg shadow-black/10">
+                <i class="fa-solid fa-soccer-ball"></i>
+            </div>
+            <h2 class="text-3xl font-semibold mb-2 tracking-tight">
+                <span class="gemini-gradient font-bold">Olá Jogador caro !</span>
+            </h2>
+            <p class="text-sm text-[#9aa0a6] max-w-[280px]">
+                Sou o Gadelha IA. Pergunte sobre meu perfil profissional, formação, projetos ou trajetória nos esportes.
+            </p>
+        </div>
+        <div id="chatMessages" class="w-full space-y-6 hidden flex-col"></div>
+    </main>
+
+    <footer class="p-4 border-t pb-10 shadow-lg">
+        <div class="input-container w-full max-w-md mx-auto flex items-center border rounded-full px-4 py-1.5 focus-within:ring-1 focus-within:ring-[#a8c7fa] transition-all">
+            <input 
+                type="text" 
+                id="userInput" 
+                placeholder="Digite sua pergunta..." 
+                class="flex-1 bg-transparent border-none outline-none text-sm placeholder-[#9aa0a6] py-2"
+                autocomplete="off"
+            >
+            <button id="sendBtn" class="w-9 h-9 rounded-full bg-transparent flex items-center justify-center text-[#a8c7fa] hover:bg-gray-500/10 transition-all">
+                <i class="fa-solid fa-paper-plane text-base"></i>
+            </button>
+        </div>
+    </footer>
+
+    <script>
+        const gadelhaKnowledge = {
+            bomDia: "Bom dia, meu(minha) jogador(a)!",
+            boaTarde: "Boa tarde, meu(minha) jogador(a)!",
+            boaNoite: "Boa noite, meu(minha) jogador(a)!",
+            namoro: "Estou procurando, hein! Rsrs",
+            comoVai: "Estou bem, meu(minha) jogador(a), e você como está?",
+            triste: "Se anime! Você é o(a) melhor!",
+            altura: "1,80m",
+            peso: "106kg atualmente.",
+            mora: "Planeta Terra, rsrsrs.",
+            time: "Corinthians!",
+            mulher: "Todas têm suas qualidades.",
+            antipreconceito: "Diga não ao preconceito!",
+            gosta: "Viver uma vida leve, fazendo coisas que eu gosto.",
+            frase: "Você é o melhor!\nEu acredito em você.",
+            aprender: "Sempre!",
+            chato: "Quem não é, rsrsrs.",
+            seAcha: "Me acho mesmo! Jogador(a) na área!",
+            jogadorCaro: "Opa! Está falando com ele(a) 😉",
+            leitura: "Gosto muito, porém tem que ser algo que agregue em minha vida. Li uma vez um livro de espiritismo que achei muito bacana. Não sou fã de romance.",
+            desafio: "É comigo mesmo! Manda que eu mato no peito.",
+            realMotiva: "Time que sou técnico atualmente. Comecei no ataque, lateral, zaga e até no gol! Fiz boas defesas, confere lá no Insta: @RealMotivaFC.",
+            deus: "Sou grato todos os dias 🙏",
+            jesus: "Tenho fé 🙏",
+            idolo: "Neymar e Ronaldo Fenômeno, entre outros.",
+            fa: "Muito obrigado pela honra 😄😄😄",
+            quemE: "Muito prazer! Meu nome é Genilson Gadelha, amplamente conhecido nos meus ambientes de atuação como 'Jogador Caro' ou 'Leão'. Tenho 42 anos, sou pai orgulhoso de 2 filhos, solteiro e focado em uma vida de alta performance, sem vícios. Minha mentalidade é sempre voltada ao crescimento e à liderança.",
+            formacao: "Minha base acadêmica é sólida e estratégica. Sou formado em Gestão de Recursos Humanos e em Gestão de Segurança Privada, com MBA em Gestão de Pessoas.\n\nAlém disso, possuo um portfólio robusto de qualificações técnicas, incluindo:\n• Formação de Bombeiro Civil e Vigilante Patrimonial\n• Proficiência nas Normas Regulamentadoras (NRs)\n• Domínio do Pacote Office avançado\n• Desenvolvimento de software e automações (HTML, CSS, Python, entre outros).",
+            hobby: "O esporte e a alta performance física são meus grandes combustíveis. Atualmente, atuo com liderança tática como Técnico de Futebol de Campo de várzea (Campeonato Interno) e sou praticante de Futebol Society aos finais de semana.\n\nNas artes marciais, fui Campeão de Jiu-Jitsu na faixa azul e iniciei no Muay Thai (graduação vermelha e branca). Sou apaixonado por treinos e musculação.",
+            perfilProfissional: "Mais de 15 anos de experiência em Segurança Privada. Atualmente Operador de Metrô (4 anos na empresa). Detentor de projetos inovadores nas áreas de segurança e tráfego como:\n• Simop\n• Sala de Aula\n• Rebocador\n• Vídeo Aulas e Cursos PDF\n• Planilha Edmonson, entre outros sistemas.",
+            padrao: "Essa pergunta não está mapeada no meu plano tático, jogador(a) caro(a). Mas mande outra que eu mato no peito!"
+        };
+
+        const plus100Questions = [
+            { q: "Qual é sua experiência no transporte metroviário?", a: "Tenho mais de 3 anos de experiência atuando diretamente na operação metroviária, garantindo segurança, pontualidade e qualidade no atendimento." },
+            { q: "O que você mais gosta no seu trabalho?", a: "A responsabilidade de transportar milhares de pessoas com segurança todos os dias." },
+            { q: "Qual sua principal habilidade técnica?", a: "Análise operacional e resolução de problemas." },
+            { q: "Você domina Excel?", a: "Sim. Possuo conhecimentos avançados em Excel, incluindo fórmulas, gráficos e automações." },
+            { q: "Você sabe programar?", a: "Sim. Tenho conhecimentos em Python, HTML, JavaScript e desenvolvimento de sistemas." },
+            { q: "Você já criou aplicativos?", a: "Sim. Já desenvolvi aplicativos e ferramentas para facilitar rotinas de trabalho e treinamentos." },
+            { q: "Você gosta de aprender novas tecnologias?", a: "Muito. Tecnologia é uma grande aliada da produtividade e da inovação." },
+            { q: "Como você define liderança?", a: "Liderança é inspirar pessoas a alcançarem resultados enquanto crescem profissionalmente." },
+            { q: "Você prefere trabalhar sozinho ou em equipe?", a: "Os dois. Tenho autonomia para atuar sozinho, mas valorizo o trabalho em equipe." },
+            { q: "Como você organiza suas tarefas?", a: "Definindo prioridades e focando no que gera maior impacto." },
+            { q: "Você se considera disciplinado?", a: "Sim. A disciplina é um dos pilares do Projeto Jogador Caro." },
+            { q: "Qual é seu lema?", a: "Evoluir um pouco todos os dias." },
+            { q: "O que faz você se destacar?", a: "A combinação de experiência operacional, tecnologia e vontade constante de aprender." },
+            { q: "Como você reage a mudanças?", a: "Vejo mudanças como oportunidades para crescer e melhorar." },
+            { q: "Qual seu maior objetivo profissional?", a: "Continuar crescendo, assumindo novos desafios e gerando valor por onde passar." },
+            { q: "Você gosta de inovação?", a: "Sim. Sempre procuro maneiras de fazer melhor aquilo que já funciona." },
+            { q: "O que é segurança para você?", a: "É um valor inegociável em qualquer atividade profissional." },
+            { q: "Você tem experiência com treinamentos?", a: "Sim. Desenvolvo materiais e simuladores voltados ao aprendizado." },
+            { q: "O que você faz para se manter atualizado?", a: "Estudo, realizo cursos e acompanho tendências do mercado." },
+            { q: "Você acredita em melhoria contínua?", a: "Sem dúvida. Sempre existe espaço para evoluir." },
+            { q: "Você gosta de desafios complexos?", a: "Sim. Eles estimulam o aprendizado e o desenvolvimento." },
+            { q: "Qual sua maior motivação?", a: "Meu crescimento pessoal e profissional." },
+            { q: "Como você lida com erros?", a: "Analiso a causa, aprendo com a situação e procuro não repetir." },
+            { q: "Você gosta de compartilhar conhecimento?", a: "Sim. Conhecimento compartilhado gera crescimento coletivo." },
+            { q: "Qual sua visão sobre trabalho?", a: "Trabalho é uma ferramenta de crescimento e realização." },
+            { q: "O que significa ser Jogador Caro?", a: "É ser alguém que investe continuamente em seu próprio valor profissional." },
+            { q: "O Projeto Jogador Caro tem um objetivo?", a: "Sim. Inspirar evolução constante e valorização profissional." },
+            { q: "Você gosta de ajudar pessoas?", a: "Sim. Ajudar faz parte do meu propósito." },
+            { q: "Você é criativo?", a: "Sim. Gosto de criar soluções práticas para problemas reais." },
+            { q: "Como você toma decisões?", a: "Com base em informações, experiência e análise dos riscos." },
+            { q: "Você gosta de metas?", a: "Sim. Metas ajudam a direcionar esforços e medir evolução." },
+            { q: "Você já desenvolveu simuladores?", a: "Sim. Desenvolvi simuladores para treinamento operacional." },
+            { q: "Qual a importância da tecnologia?", a: "A tecnologia aumenta eficiência, aprendizado e produtividade." },
+            { q: "Você gosta de aprender sozinho?", a: "Sim. Sou bastante autodidata." },
+            { q: "O que faz no tempo livre?", a: "Estudo, pratico esportes e desenvolvo projetos." },
+            { q: "Qual esporte você pratica?", a: "Futebol." },
+            { q: "O futebol ajuda na vida profissional?", a: "Sim. Ensina trabalho em equipe, disciplina e tomada de decisão." },
+            { q: "Você gosta de competir?", a: "Sim, principalmente comigo mesmo, buscando ser melhor a cada dia." },
+            { q: "Qual sua maior força?", a: "Persistência." },
+            { q: "Qual habilidade deseja desenvolver mais?", a: "Liderança e influência positiva sobre pessoas." },
+            { q: "Você gosta de criar projetos?", a: "Sim. Transformar ideias em realidade é algo que me motiva." },
+            { q: "Como você define sucesso?", a: "Ser feliz e evoluir continuamente." },
+            { q: "O que você faz diante de dificuldades?", a: "Procuro soluções em vez de focar apenas nos problemas." },
+            { q: "Você acredita no aprendizado constante?", a: "Sim. Nunca paramos de aprender." },
+            { q: "Qual seu conselho para quem está começando?", a: "Invista em conhecimento e mantém a disciplina." },
+            { q: "Qual seu nome completo?", a: "Genilson Gadelha de Oliveira." },
+            { q: "Como prefere ser chamado?", a: "Gadelha." },
+            { q: "Qual sua idade?", a: "Tenho 41 anos." },
+            { q: "Onde mora?", a: "Moro na região metropolitana de São Paulo." },
+            { q: "Você possui filhos?", a: "Sim, sou pai e valorizo muito minha família." },
+            { q: "Você fuma?", a: "Não." },
+            { q: "Possui habilitação?", a: "Sim, CNH categoria AD." },
+            { q: "Qual sua formação mais recente?", a: "Pós-graduação em Gestão de Pessoas." },
+            { q: "Você gosta de gestão de pessoas?", a: "Sim. Pessoas são o principal ativo de qualquer organização." },
+            { q: "Você já trabalhou com segurança?", a: "Sim. Tenho experiência na área de segurança privada." },
+            { q: "Você já trabalhou com atendimento ao público?", a: "Sim. Ao longo da carreira desenvolvi habilidades de comunicação e atendimento." },
+            { q: "O que considera essencial em um profissional?", a: "Comprometimento, ética e vontade de aprender." },
+            { q: "Como você mede seu crescimento?", a: "Pelos conhecimentos adquiridos e pelos resultados alcançados." },
+            { q: "Você é organizado?", a: "Sim. Organização ajuda a manter produtividade e qualidade." },
+            { q: "Você gosta de planejamento?", a: "Sim. Planejamento reduz riscos e aumenta as chances de sucesso." },
+            { q: "O que mais valoriza em uma equipe?", a: "Respeito, confiança e cooperação." },
+            { q: "Qual é sua visão sobre o futuro?", a: "Continuar aprendendo, inovando e crescendo profissionalmente." },
+            { q: "Você tem perfil de liderança?", a: "Sim. Busco influenciar positivamente as pessoas através do exemplo." },
+            { q: "Como você aprende melhor?", a: "Praticando e aplicando o conhecimento na realidade." },
+            { q: "Você gosta de resolver problemas?", a: "Sim. Resolver problemas é uma oportunidade de gerar valor." },
+            { q: "O que te inspira?", a: "Pessoas que evoluem apesar das dificuldades." },
+            { q: "Qual é sua marca pessoal?", a: "Disciplina, evolução e inovação." },
+            { q: "Você acredita em trabalho duro?", a: "Sim, mas aliado à estratégia e ao conhecimento." },
+            { q: "O que diferencia você de outros profissionais?", a: "A capacidade de unir operação, tecnologia e desenvolvimento humano." },
+            { q: "Você gosta de desafios de liderança?", a: "Sim. Eles aceleram o crescimento profissional." },
+            { q: "Qual é sua principal característica?", a: "Determinação." },
+            { q: "Como gostaria de ser lembrado?", a: "Como alguém que ajudou pessoas e deixou um legado positivo." },
+            { q: "O que você busca diariamente?", a: "Ser melhor do que fui ontem." },
+            { q: "Qual é a mensagem do Jogador Caro?", a: "Valorize seu conhecimento, invista em você e nunca pare de evoluir." },
+            { q: "Quem é Gadelha em uma frase?", a: "Sou o Jogador Caro: um profissional que transforma conhecimento, disciplina e inovação em resultados." }
+        ];
+
+        const ballBtn = document.getElementById('ballBtn');
+        const themeBtn = document.getElementById('themeBtn');
+        const historyDrawer = document.getElementById('historyDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        const closeDrawer = document.getElementById('closeDrawer');
+        const historyList = document.getElementById('historyList');
+        const chatMessages = document.getElementById('chatMessages');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatContainer = document.getElementById('chatContainer');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const menuBtn = document.getElementById('menuBtn');
+        const plus100Container = document.getElementById('plus100Container');
+        const plusArrow = document.getElementById('plusArrow');
+
+        let chatHistory = [];
+        let isTyping = false;
+
+        // Gerar itens dinâmicos do +100
+        plus100Questions.forEach((item, index) => {
+            const num = index + 26;
+            const btn = document.createElement('button');
+            btn.className = "w-full text-left px-4 py-1.5 text-xs hover:bg-gray-500/10 rounded transition-colors truncate flex items-center gap-1.5";
+            btn.innerHTML = `<span class="text-[#a8c7fa] font-bold">${num}.</span> ${item.q}`;
+            btn.onclick = () => triggerMenuAction(item.q);
+            plus100Container.appendChild(btn);
+        });
+
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            document.body.classList.toggle('light-mode');
+        });
+
+        function resetToHome() {
+            if (isTyping) return;
+            chatMessages.innerHTML = '';
+            chatMessages.classList.add('hidden');
+            welcomeScreen.classList.remove('hidden');
+            historyDrawer.classList.add('-translate-x-full');
+            drawerOverlay.classList.add('hidden');
+        }
+
+        ballBtn.addEventListener('click', () => {
+            historyDrawer.classList.remove('-translate-x-full');
+            drawerOverlay.classList.remove('hidden');
+        });
+
+        closeDrawer.addEventListener('click', () => {
+            historyDrawer.classList.add('-translate-x-full');
+            drawerOverlay.classList.add('hidden');
+        });
+
+        drawerOverlay.addEventListener('click', () => {
+            historyDrawer.classList.add('-translate-x-full');
+            drawerOverlay.classList.add('hidden');
+        });
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', () => {
+            dropdownMenu.classList.add('hidden');
+        });
+
+        function togglePlus100(e) {
+            e.stopPropagation();
+            plus100Container.classList.toggle('hidden');
+            plusArrow.classList.toggle('fa-chevron-down');
+            plusArrow.classList.toggle('fa-chevron-up');
+        }
+
+        function triggerMenuAction(text) {
+            userInput.value = text;
+            dropdownMenu.classList.add('hidden');
+            handleSend();
+        }
+
+        function getBotResponse(message) {
+            const cleanMsg = message.toLowerCase().trim();
+            
+            // Verificação na lista estendida do +100 primeiro
+            const foundPlus = plus100Questions.find(item => item.q.toLowerCase().trim() === cleanMsg);
+            if (foundPlus) return foundPlus.a;
+
+            if (cleanMsg === 'bom dia') return gadelhaKnowledge.bomDia;
+            if (cleanMsg === 'boa tarde') return gadelhaKnowledge.boaTarde;
+            if (cleanMsg === 'boa noite') return gadelhaKnowledge.boaNoite;
+            if (cleanMsg.match(/(namora|namorada|namorado|comprometido)/)) return gadelhaKnowledge.namoro;
+            if (cleanMsg.match(/(como vai|tudo bem|tudo bom|como voce esta)/)) return gadelhaKnowledge.comoVai;
+            if (cleanMsg.match(/(triste|chateado|desanimado|mal)/)) return gadelhaKnowledge.triste;
+            if (cleanMsg.match(/(altura|qual sua altura)/)) return gadelhaKnowledge.altura;
+            if (cleanMsg.match(/(peso|qual seu peso)/)) return gadelhaKnowledge.peso;
+            if (cleanMsg.match(/(mora|onde voce mora)/)) return gadelhaKnowledge.mora;
+            if (cleanMsg.match(/(time|torce|corinthians|timao)/)) return gadelhaKnowledge.time;
+            if (cleanMsg === 'mulher' || cleanMsg === 'mulheres') return gadelhaKnowledge.mulher;
+            if (cleanMsg.match(/(viado|bicha|boiola|gay)/)) return gadelhaKnowledge.antipreconceito;
+            if (cleanMsg.match(/(gosta de fazer|o que gosta)/)) return gadelhaKnowledge.gosta;
+            if (cleanMsg.match(/(frase|motivacao|motivacional)/)) return gadelhaKnowledge.frase;
+            if (cleanMsg.match(/(aprender|aprendizado)/)) return gadelhaKnowledge.aprender;
+            if (cleanMsg.match(/(chato|chata)/)) return gadelhaKnowledge.chato;
+            if (cleanMsg.match(/(se acha)/)) return gadelhaKnowledge.seAcha;
+            if (cleanMsg.match(/(jogador caro|jogadora cara)/)) return gadelhaKnowledge.jogadorCaro;
+            if (cleanMsg.match(/(ler|leitura|livro)/)) return gadelhaKnowledge.leitura;
+            if (cleanMsg.match(/(desafio|desafios)/)) return gadelhaKnowledge.desafio;
+            if (cleanMsg.match(/(real motiva|realmotiva)/)) return gadelhaKnowledge.realMotiva;
+            if (cleanMsg === 'deus') return gadelhaKnowledge.deus;
+            if (cleanMsg === 'jesus') return gadelhaKnowledge.jesus;
+            if (cleanMsg.match(/(idolo|ídolo|ney|ronaldo)/)) return gadelhaKnowledge.idolo;
+            if (cleanMsg.match(/(fa|fã|sou seu)/)) return gadelhaKnowledge.fa;
+            if (cleanMsg.match(/(ola|oi|quem e voce|quem e vc|nome|idade|filho|leao)/)) return gadelhaKnowledge.quemE;
+            if (cleanMsg.match(/(formacao|estudou|faculdade|mba|curso|bombeiro|vigilante|nr|python|html)/)) return gadelhaKnowledge.formacao;
+            if (cleanMsg.match(/(hobby|esporte|futebol|luta|jiu jitsu|muay thai|musculacao|tecnico)/)) return gadelhaKnowledge.hobby;
+            if (cleanMsg.match(/(perfil|profissional|experiencia|seguranca|metro|projeto|simop|edmonson)/)) return gadelhaKnowledge.perfilProfissional;
+            
+            return gadelhaKnowledge.padrao;
+        }
+
+        function typeWriterEffect(element, text, speed = 15) {
+            isTyping = true;
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    chatContainer.scrollTo({ top: chatContainer.scrollHeight });
+                    setTimeout(type, speed);
+                } else {
+                    isTyping = false;
+                }
+            }
+            type();
+        }
+
+        function updateHistory(text) {
+            if (chatHistory.includes(text)) return; 
+            chatHistory.unshift(text);
+            if (chatHistory.length > 10) chatHistory.pop();
+            
+            historyList.innerHTML = '';
+            chatHistory.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left px-3 py-2 text-sm text-[#9aa0a6] hover:bg-gray-500/10 rounded-lg transition-colors truncate mb-1";
+                btn.innerHTML = `<i class="fa-regular fa-comment mr-2 text-xs"></i> ${item}`;
+                btn.onclick = () => {
+                    userInput.value = item;
+                    handleSend();
+                    closeDrawer.click();
+                };
+                historyList.appendChild(btn);
+            });
+        }
+
+        function appendMessage(sender, text) {
+            if (chatMessages.classList.contains('hidden')) {
+                welcomeScreen.classList.add('hidden');
+                chatMessages.classList.remove('hidden');
+                chatMessages.classList.add('flex');
+            }
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `flex flex-col ${sender === 'user' ? 'items-end' : 'items-start'} w-full animate-fade-in`;
+            
+            if (sender === 'user') {
+                msgDiv.innerHTML = `<div class="user-msg max-w-[85%] rounded-2xl rounded-tr-sm px-4 py-2.5 text-sm shadow-sm select-text">${text}</div>`;
+                chatMessages.appendChild(msgDiv);
+                chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+            } else {
+                msgDiv.innerHTML = `
+                    <div class="flex items-start gap-2.5 max-w-[90%]">
+                        <div class="bot-icon-box w-7 h-7 rounded-lg border flex items-center justify-center text-xs text-[#a8c7fa] shrink-0 mt-0.5"><i class="fa-solid fa-soccer-ball"></i></div>
+                        <div class="text-sm leading-relaxed pt-1 select-text whitespace-pre-line text-target"></div>
+                    </div>`;
+                chatMessages.appendChild(msgDiv);
+                const targetTextContainer = msgDiv.querySelector('.text-target');
+                typeWriterEffect(targetTextContainer, text);
+            }
+        }
+
+        function handleSend() {
+            if (isTyping) return;
+            const text = userInput.value.trim();
+            if (!text) return;
+            appendMessage('user', text);
+            updateHistory(text);
+            userInput.value = '';
+            setTimeout(() => {
+                const botReply = getBotResponse(text);
+                appendMessage('bot', botReply);
+            }, 400);
+        }
+
+        sendBtn.addEventListener('click', handleSend);
+        userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
+    </script>
+</body>
+</html>
