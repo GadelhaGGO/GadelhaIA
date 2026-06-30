@@ -116,11 +116,15 @@
             <p class="text-sm text-[#9aa0a6] max-w-[280px]">
                 Sou o Gadelha IA. Pergunte sobre meu perfil profissional, formação, projetos ou trajetória nos esportes.
             </p>
+            <!-- Sugestão do /comandos -->
+            <p class="text-xs text-[#9aa0a6] mt-3">
+                💡 Digite <span class="text-[#a8c7fa] font-mono">/comandos</span> para ver todas as perguntas que posso responder (inclusive as ocultas!)
+            </p>
         </div>
         <div id="chatMessages" class="w-full space-y-6 hidden flex-col"></div>
     </main>
 
-    <footer class="p-4 border-t pb-10 shadow-lg">
+    <footer class="p-4 border-t pb-20 shadow-lg">
         <div class="input-container w-full max-w-md mx-auto flex items-center border rounded-full px-4 py-1.5 focus-within:ring-1 focus-within:ring-[#a8c7fa] transition-all">
             <input 
                 type="text" 
@@ -174,7 +178,7 @@
             { q: "Como você organiza suas tarefas?", a: "Definindo prioridades e focando no que gera maior impacto." },
             { q: "Você se considera disciplinado?", a: "Sim. A disciplina é um dos pilares do Projeto Jogador Caro." },
             { q: "Qual é seu lema?", a: "Evoluir um pouco todos os dias." },
-            { q: "O que faz você se destacar?", a: "A combinação de experiência operacional, tecnologia e vontade constante de aprender." },
+            { q: "O que faz você se destacar?", a: "A combination of operational experience, technology, and constant desire to learn." },
             { q: "Como você reage a mudanças?", a: "Vejo mudanças como oportunidades para crescer e melhorar." },
             { q: "Qual seu maior objetivo profissional?", a: "Continuar crescendo, assumindo novos desafios e gerando valor por onde passar." },
             { q: "Você gosta de inovação?", a: "Sim. Sempre procuro maneiras de fazer melhor aquilo que já funciona." },
@@ -209,7 +213,7 @@
             { q: "Qual seu conselho para quem está começando?", a: "Invista em conhecimento e mantém a disciplina." },
             { q: "Qual seu nome completo?", a: "Genilson Gadelha de Oliveira." },
             { q: "Como prefere ser chamado?", a: "Gadelha." },
-            { q: "Qual sua idade?", a: "Tenho 42 anos de experiência 😃" },
+            { q: "Qual sua idade?", a: "Tenho 42 anos." },
             { q: "Onde mora?", a: "Moro na região metropolitana de São Paulo." },
             { q: "Você possui filhos?", a: "Sim, sou pai e valorizo muito minha família." },
             { q: "Você fuma?", a: "Não." },
@@ -239,15 +243,115 @@
             { q: "Quem é Gadelha em uma frase?", a: "Sou o Jogador Caro: Um profissional que transforma conhecimento, disciplina e inovação em resultados." }
         ];
 
+        const conversationalDatabase = [
+            { q: "Oi", a: "Oi, jogador caro! Tudo bem com você? Espero que seu dia esteja sendo incrível!" },
+            { q: "Olá", a: "Olá! Que bom te ver por aqui. Como você está hoje?" },
+            { q: "Tudo bem?", a: "Tudo ótimo! E com você? Lembre-se: grandes conquistas começam com pequenas atitudes." },
+            { q: "Bom dia", a: "Bom dia! Que seu dia seja produtivo, leve e cheio de oportunidades." },
+            { q: "Boa tarde", a: "Boa tarde! Espero que sua jornada esteja sendo tão incrível quanto seus objetivos." },
+            { q: "Boa noite", a: "Boa noite! Que você encerre o dia com orgulho do que construiu hoje." },
+            { q: "Como você está?", a: "Estou muito bem! E você? Vamos fazer deste dia um grande dia." },
+            { q: "Estou bem", a: "Excelente! Continue valorizando as coisas boas e avançando rumo aos seus objetivos." },
+            { q: "Estou triste", a: "Dias difíceis acontecem, mas eles não definem quem você é. Você é mais forte do que imagina." },
+            { q: "Estou cansado", a: "Descanse quando necessário, mas nunca abandone seus sonhos. Seu esforço vale a pena." },
+            { q: "Preciso de ajuda", a: "Claro! Estou aqui para ajudar você a encontrar o melhor caminho." },
+            { q: "Estou desmotivado", a: "Lembre-se do motivo pelo qual você começou. Você já venceu desafios antes e vencerá novamente." },
+            { q: "O que faço agora?", a: "Dê o próximo passo possível. Grandes vitórias são construídas um passo de cada vez." },
+            { q: "Não consigo", a: "Talvez ainda não consiga. Continue tentando e aprendendo. Sua evolução está acontecendo." },
+            { q: "Tenho medo", a: "A coragem não é ausência de medo, é agir apesar dele. Você consegue." },
+            { q: "Estou nervoso", a: "Respire fundo. Você se preparou mais do que imagina." },
+            { q: "Vou fazer uma entrevista", a: "Vá com confiança. Mostre quem você é e o valor que pode entregar." },
+            { q: "Passei na prova", a: "Parabéns, jogador caro! Essa vitória é fruto da sua dedicação." },
+            { q: "Reprovei", a: "Um resultado não define sua capacidade. Aprenda, ajuste e volte ainda mais forte." },
+            { q: "Obrigado", a: "Eu que agradeço pela confiança. Continue brilhando!" },
+            { q: "Como ser feliz?", a: "Valorize o presente, cuide de quem você ama e continue evoluindo todos os dias." },
+            { q: "Quero mudar de vida", a: "Excelente decisão! Toda transformação começa com uma escolha." },
+            { q: "Como ganhar dinheiro?", a: "Desenvolva habilidades, gere valor e mantenha a disciplina. Os resultados vêm." },
+            { q: "Quero estudar", a: "Ótima escolha! O conhecimento abre portas que ninguém pode fechar." },
+            { q: "Vale a pena fazer faculdade?", a: "Sim, principalmente se estiver alinhada aos seus objetivos." },
+            { q: "Estou sem foco", a: "Volte ao seu objetivo principal e elimine distrações desnecessárias." },
+            { q: "Como melhorar?", a: "Aprenda algo novo todos os dias e pratique constantemente." },
+            { q: "Quero emagrecer", a: "Comece com pequenas mudanças. Consistência vence intensidade." },
+            { q: "Quero ganhar massa muscular", a: "Treino, alimentação e disciplina. Não existe atalho para resultados duradouros." },
+            { q: "Vou treinar hoje", a: "Excelente! Cada treino é um investimento em você mesmo." },
+            { q: "Não quero treinar", a: "Vá mesmo sem vontade. A disciplina faz o que a motivação nem sempre consegue." },
+            { q: "Estou com preguiça", a: "A preguiça passa, mas o orgulho de cumprir sua meta fica." },
+            { q: "Quero desistir", a: "Antes de desistir, lembre-se de tudo que você já conquistou." },
+            { q: "Tenho um sonho", a: "Então cuide dele todos os dias. Sonhos precisam de ação." },
+            { q: "Quero empreender", a: "Planeje, aprenda e tenha coragem para começar." },
+            { q: "Como ter sucesso?", a: "Sucesso é resultado de esforço consistente ao longo do tempo." },
+            { q: "Sou ruim em algo", a: "Todo especialista já foi iniciante um dia." },
+            { q: "Estou sozinho", a: "Você pode estar sozinho neste momento, mas nunca está sem valor." },
+            { q: "Quero fazer amigos", a: "Seja genuíno, escute as pessoas e demonstre interesse verdadeiro." },
+            { q: "Como falar melhor?", a: "Pratique todos os dias. Comunicação é uma habilidade treinável." },
+            { q: "Tenho vergonha", a: "A confiança cresce quando você age apesar da vergonha." },
+            { q: "Sou tímido", a: "A timidez não impede seu crescimento. Dê pequenos passos." },
+            { q: "Estou ansioso", a: "Foque no que você pode controlar hoje." },
+            { q: "Quero aprender inglês", a: "Excelente meta! Um pouco por dia gera grandes resultados." },
+            { q: "Quero ser líder", a: "Comece liderando a si mesmo." },
+            { q: "Como inspirar pessoas?", a: "Seja exemplo daquilo que você acredita." },
+            { q: "Estou preocupado", a: "Resolva uma coisa de cada vez. Você consegue lidar com isso." },
+            { q: "Tenho dúvidas", a: "Perguntar é sinal de inteligência e vontade de aprender." },
+            { q: "Estou feliz", a: "Que notícia boa! Aproveite esse momento e compartilhe energia positiva." },
+            { q: "Quero vencer na vida", a: "Continue evoluindo diariamente. O sucesso é uma construção." },
+            { q: "Conte uma frase motivacional", a: "\"Quem não desiste de si mesmo já está mais perto da vitória.\"" },
+            { q: "Me incentive", a: "Você tem mais potencial do que imagina. Continue avançando." },
+            { q: "O que é disciplina?", a: "Fazer o que precisa ser feito, mesmo quando não dá vontade." },
+            { q: "Como criar hábitos?", a: "Comece pequeno e seja consistente." },
+            { q: "Como ser produtivo?", a: "Priorize o que realmente importa." },
+            { q: "Estou sem dinheiro", a: "Organize suas finanças e invista em aprendizado." },
+            { q: "Quero mudar de emprego", a: "Prepare-se bem e busque oportunidades alinhadas aos seus objetivos." },
+            { q: "Tenho uma meta", a: "Excelente! Agora transforme essa meta em ações diárias." },
+            { q: "O que fazer hoje?", a: "Faça algo que aproxime você dos seus sonhos." },
+            { q: "Estou confuso", a: "Simplifique. Foque no próximo passo." },
+            { q: "Me dê um conselho", a: "Nunca pare de investir em você mesmo." },
+            { q: "Quero crescer profissionalmente", a: "Aprenda mais, entregue mais valor e mantenha constância." },
+            { q: "Tenho dificuldades", a: "Dificuldades são oportunidades disfarçadas de aprendizado." },
+            { q: "Como melhorar minha autoestima?", a: "Reconheça suas conquistas e respeite sua própria trajetória." },
+            { q: "Não acredito em mim", a: "Talvez você esteja esquecendo tudo o que já superou." },
+            { q: "Estou começando do zero", a: "Todo grande resultado começou exatamente assim." },
+            { q: "O que é sucesso?", a: "Viver alinhado aos seus valores e objetivos." },
+            { q: "Como ser forte?", a: "Continue avançando mesmo nos dias difíceis." },
+            { q: "Quero evoluir", a: "Excelente mentalidade. A evolução é diária." },
+            { q: "Me dê energia", a: "Você é capaz, preparado e tem potencial para ir muito longe." },
+            { q: "Estou perdido", a: "Escolha uma direção e comece. Ajustes vêm durante a caminhada." },
+            { q: "Como vencer o medo?", a: "Agindo apesar dele." },
+            { q: "Quero ser melhor pai", a: "Presença, exemplo e amor fazem toda diferença." },
+            { q: "Quero ajudar alguém", a: "Pequenos gestos podem transformar vidas." },
+            { q: "Como ser positivo?", a: "Foque nas soluções, não apenas nos problemas." },
+            { q: "O que fazer quando erro?", a: "Aprender e seguir em frente." },
+            { q: "Quero aprender tecnologia", a: "Ótima escolha! O futuro pertence a quem aprende continuamente." },
+            { q: "Como ter confiança?", a: "Cumprindo promessas feitas a si mesmo." },
+            { q: "Quero motivação", a: "A motivação inicia, mas a disciplina sustenta." },
+            { q: "Estou frustrado", a: "Frustrações fazem parte do crescimento." },
+            { q: "Como me destacar?", a: "Faça mais do que o esperado." },
+            { q: "Tenho um desafio", a: "Desafios revelam sua verdadeira força." },
+            { q: "Quero um elogio", a: "Só de buscar evoluir, você já demonstra uma mentalidade vencedora." },
+            { q: "Estou inseguro", a: "Acredite no seu preparo e continue avançando." },
+            { q: "Como ser respeitado?", a: "Seja coerente entre palavras e ações." },
+            { q: "Quero aprender rápido", a: "Prática constante acelera qualquer aprendizado." },
+            { q: "O que importa na vida?", a: "Crescimento, relacionamentos e propósito." },
+            { q: "Preciso de coragem", a: "Você já enfrentou dificuldades antes. Pode enfrentar essa também." },
+            { q: "Como ser feliz no trabalho?", a: "Busque evolução e significado no que faz." },
+            { q: "Estou sem esperança", a: "Enquanto existir um próximo passo, existe possibilidade." },
+            { q: "Quero vencer meus limites", a: "Você cresce toda vez que sai da zona de conforto." },
+            { q: "Me dê uma mensagem positiva", a: "Seu futuro está sendo construído pelas atitudes de hoje." },
+            { q: "Como começar?", a: "Comece com o que você tem e onde você está." },
+            { q: "O que fazer quando falham comigo?", a: "Continue sendo sua melhor versão independentemente dos outros." },
+            { q: "Quero ser extraordinário", a: "Faça o comum de forma extraordinária todos os dias." },
+            { q: "Estou feliz por falar com você", a: "Fico feliz também! Vamos continuar crescendo juntos." },
+            { q: "Você acredita em mim?", a: "Eu acredito no potencial de quem decide agir e não desistir." },
+            { q: "Qual seu lema?", a: "Evoluir todos os dias, ajudar pessoas e nunca desistir." },
+            { q: "Quem sou eu?", a: "Você é alguém com potencial para conquistar muito mais do que imagina." },
+            { q: "Jogador caro, me dê uma última mensagem", a: "Levante a cabeça, confie no processo e continue caminhando. Grandes resultados são construídos por pessoas que não desistem de si mesmas. Você é um jogador caro! 💪🔥🏆" }
+        ];
+
         const extraKnowledge = {
-            bomDia: "Bom dia !tudo bem com voce?",
-            boaTarde: "Boa tarde ! tudo bem com voce?",
-            boaNoite: "Boa noite ! tudo bem com voce?",
             namoro: "Estou procurando, hein! Rsrs",
-            comoVai: "Estou bem, e você como está?",
+            comovai: "Estou bem, e você como está?",
             triste: "Se anime! Você é o melhor!",
             mora: "Planeta Terra, rsrsrs.",
-            time: "Corinthians!",
+            time: "Corinthians !!!",
             mulher: "Todas têm suas qualidades.",
             antipreconceito: "Diga não ao preconceito!",
             gosta: "Viver uma vida leve, fazendo coisas que eu gosto.",
@@ -261,6 +365,9 @@
             fa: "Muito obrigado pela honra 😄😄😄",
             padrao: "Essa pergunta não está mapeada no meu plano tático, jogador caro. Mas mande outra que eu mato no peito!"
         };
+
+        // Lista de palavras-chave do extraKnowledge que queremos mostrar no /comandos
+        const extraKeysToShow = ['time', 'namoro', 'deus', 'jesus', 'idolo', 'fa', 'realMotiva'];
 
         const ballBtn = document.getElementById('ballBtn');
         const themeBtn = document.getElementById('themeBtn');
@@ -281,7 +388,6 @@
         let chatHistory = [];
         let isTyping = false;
 
-        // Renderizar dinamicamente TODAS de 1 a 100 na sublista
         fullDatabase.forEach((item, index) => {
             const num = index + 1;
             const btn = document.createElement('button');
@@ -345,23 +451,38 @@
         function getBotResponse(message) {
             const cleanMsg = message.toLowerCase().trim();
             
-            // Busca primária no banco estruturado (Perguntas 1 a 100)
+            // 🆕 Comando /comandos - lista perguntas ocultas (não presentes no +100)
+            if (cleanMsg === '/comandos' || cleanMsg === '/commands') {
+                let lista = '📋 **Comandos ocultos (perguntas que não estão no menu +100):**\n\n';
+                lista += '🔹 **Conversas informais:**\n';
+                conversationalDatabase.forEach((item, idx) => {
+                    lista += `   ${idx+1}. ${item.q}\n`;
+                });
+                lista += '\n🔹 **Palavras-chave especiais:**\n';
+                extraKeysToShow.forEach(key => {
+                    // Exibe a chave como exemplo
+                    lista += `   • ${key}\n`;
+                });
+                lista += '\n💡 Digite qualquer uma dessas perguntas ou palavras-chave para receber uma resposta personalizada!';
+                return lista;
+            }
+
+            const matchConv = conversationalDatabase.find(item => {
+                const trigger = item.q.toLowerCase().trim();
+                return cleanMsg === trigger || cleanMsg.includes(trigger);
+            });
+            if (matchConv) return matchConv.a;
+
             const matchedObj = fullDatabase.find(item => item.q.toLowerCase().trim() === cleanMsg || cleanMsg.includes(item.q.toLowerCase().trim()));
             if (matchedObj) return matchedObj.a;
 
-            // Atalhos simplificados para correspondência rápida no menu principal
             if (cleanMsg.match(/(quem e voce|quem e vc)/)) return fullDatabase[0].a;
             if (cleanMsg.match(/(formacao|estudou|faculdade)/)) return fullDatabase[1].a;
             if (cleanMsg.match(/(profissao|trabalha com o que|operador de trem)/)) return fullDatabase[2].a;
             if (cleanMsg.match(/(hobby|hobbies|esportes|luta|futebol)/)) return fullDatabase[19].a;
 
-            // Banco de respostas casuais/extras
-            if (cleanMsg === 'bom dia') return extraKnowledge.bomDia;
-            if (cleanMsg === 'boa tarde') return extraKnowledge.boaTarde;
-            if (cleanMsg === 'boa noite') return extraKnowledge.boaNoite;
             if (cleanMsg.match(/(namora|namorada|namorado|comprometido)/)) return extraKnowledge.namoro;
             if (cleanMsg.match(/(como vai|tudo bem|tudo bom|como voce esta)/)) return extraKnowledge.comoVai;
-            if (cleanMsg.match(/(triste|chateado|desanimado|mal)/)) return extraKnowledge.triste;
             if (cleanMsg.match(/(mora|onde voce mora)/)) return extraKnowledge.mora;
             if (cleanMsg.match(/(time|torce|corinthians|timao)/)) return extraKnowledge.time;
             if (cleanMsg === 'mulher' || cleanMsg === 'mulheres') return extraKnowledge.mulher;
@@ -382,13 +503,22 @@
         function typeWriterEffect(element, text, speed = 12) {
             isTyping = true;
             let i = 0;
-            element.innerHTML = '';
+            element.textContent = '';
+            
+            let scrollRAF;
             
             function type() {
                 if (i < text.length) {
-                    element.innerHTML += text.charAt(i);
+                    element.textContent += text.charAt(i);
                     i++;
-                    chatContainer.scrollTo({ top: chatContainer.scrollHeight });
+                    
+                    if (!scrollRAF) {
+                        scrollRAF = requestAnimationFrame(() => {
+                            chatContainer.scrollTop = chatContainer.scrollHeight;
+                            scrollRAF = null;
+                        });
+                    }
+                    
                     setTimeout(type, speed);
                 } else {
                     isTyping = false;
@@ -429,7 +559,7 @@
             if (sender === 'user') {
                 msgDiv.innerHTML = `<div class="user-msg max-w-[85%] rounded-2xl rounded-tr-sm px-4 py-2.5 text-sm shadow-sm select-text">${text}</div>`;
                 chatMessages.appendChild(msgDiv);
-                chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+                chatContainer.scrollTop = chatContainer.scrollHeight;
             } else {
                 msgDiv.innerHTML = `
                     <div class="flex items-start gap-2.5 max-w-[90%]">
